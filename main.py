@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import models
+from models import models
 from db.database import engine
 from routers import users, books
 

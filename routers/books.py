@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from starlette import status
 from db.database import get_db
 from db.operations.book import create_book, get_all_books, get_book_by_id, get_books_by_author
-from schemas import BookCreate, BookResponse
-from models import Book
+from models.schemas import BookCreate, BookResponse
+from models.models import Book
 from sqlalchemy import func
 
 # Métodos publicos: Obtener libros, obtener libro por id
