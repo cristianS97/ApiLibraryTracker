@@ -1,31 +1,31 @@
-# ApiLibraryTracker
+# 📚 ApiLibraryTracker
 
-Este es el backend de la aplicación BookTracker, desarrollado con FastAPI. Proporciona un sistema de autenticación centralizado mediante JWT (JSON Web Tokens) y seguridad basada en roles.
+Este es el backend de la aplicación BookTracker, desarrollado con FastAPI. Proporciona un sistema de gestión de libros y autenticación centralizado mediante JWT (JSON Web Tokens) con seguridad basada en roles.
 
 ## 🛠️ Tecnologías utilizadas
 
-* FastAPI: Framework principal.
-* SQLAlchemy: ORM para la base de datos (SQLite).
-* BCrypt: Hashing de contraseñas de alta seguridad.
-* Python-Jose: Gestión de tokens JWT.
-* Pydantic: Validación de tipos y esquemas de datos.
+* FastAPI: Framework principal de alto rendimiento.
+* SQLAlchemy: ORM para la gestión de la base de datos SQLite.
+* BCrypt: Hashing de contraseñas (uso directo para evitar conflictos).
+* Python-Jose: Generación y validación de tokens JWT.
+* Pydantic: Validación de esquemas y auto-documentación.
 
 ## 📂 Estructura del Proyecto
 
-```text
 A1BookTracker/
-├── db/                   # Capa de datos
-│   ├── database.py       # Conexión y sesión de base de datos
-│   └── operations/       # Funciones CRUD específicas
-│       └── user.py       # Lógica de persistencia de usuarios
-├── routers/              # Controladores de la API
-│   └── users.py          # Rutas de Login y Registro
-├── auth.py               # Lógica de seguridad (JWT + Bcrypt)
-├── models.py             # Definición de tablas SQLAlchemy
-├── schemas.py            # Modelos de validación Pydantic
-├── main.py               # Punto de entrada de la aplicación
-└── docker-compose.yml    # Orquestación para despliegue
-```
+├── db/                   # Capa de datos y persistencia
+│   ├── database.py       # Configuración de SQLite y sesión
+│   └── operations/       # Lógica CRUD (Create, Read, Update, Delete)
+│       ├── user.py       # Operaciones de usuario
+│       └── book.py       # Operaciones de libros
+├── routers/              # Controladores de la API (Endpoints)
+│   ├── users.py          # Autenticación y usuarios
+│   └── books.py          # Gestión de catálogo de libros
+├── auth.py               # Utilidades de seguridad (Bcrypt + JWT)
+├── models.py             # Definición de tablas de la base de datos
+├── schemas.py            # Modelos de datos y validación de Pydantic
+├── main.py               # Punto de entrada y configuración de la App
+└── docker-compose.yml    # Configuración para contenedores
 
 ## 🚀 Configuración y Ejecución
 
@@ -43,12 +43,11 @@ A1BookTracker/
 
 ## 🔐 Endpoints Disponibles
 
-- POST /users/register : Crea un nuevo usuario. Valida si el nombre de usuario ya existe (retorna 409).
-- POST /users/login    : Valida credenciales y retorna un "access_token" de tipo Bearer.
+### Autenticación (Usuarios)
+- POST /users/register : Registra un nuevo usuario. (409 si ya existe).
+- POST /users/login    : Valida credenciales y retorna un JWT Bearer Token.
 
-## 📱 Notas para la Aplicación Android
-
-Para conectar el emulador o un dispositivo físico a esta API:
-1. Localiza tu IP local (usando 'ipconfig' en el CMD).
-2. En Retrofit (Android), usa la URL: http://TU_IP_LOCAL:8000/
-3. No uses '127.0.0.1' en Android, ya que se refiere al propio teléfono.
+### Gestión de Libros
+- POST /book/          : Registra un nuevo libro. Valida duplicados por título/autor.
+- GET  /book/          : Retorna todos los libros. Permite filtrar por autor usando query params (?author=nombre).
+- GET  /book/{id}/     : Retorna la información detallada de un libro específico por su ID.
