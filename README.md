@@ -12,6 +12,7 @@ Este es el backend de la aplicación BookTracker, desarrollado con FastAPI. Prop
 
 ## 📂 Estructura del Proyecto
 
+```text
 A1BookTracker/
 ├── db/                   # Capa de datos y persistencia
 │   ├── database.py       # Configuración de SQLite y sesión
@@ -26,6 +27,7 @@ A1BookTracker/
 ├── schemas.py            # Modelos de datos y validación de Pydantic
 ├── main.py               # Punto de entrada y configuración de la App
 └── docker-compose.yml    # Configuración para contenedores
+```
 
 ## 🚀 Configuración y Ejecución
 
