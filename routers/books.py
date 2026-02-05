@@ -3,18 +3,17 @@ from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 from starlette import status
 from db.database import get_db
-from db.operations.book import create_book, get_all_books, get_book_by_id, get_books_by_author
+from db.operations.book import create_book, get_all_books, get_book_by_id, get_books_by_author, update_book, delete_book
 from models.schemas import BookCreate, BookResponse
-from models.models import Book
+from models.models import Book, User
 from sqlalchemy import func
-
-# Métodos publicos: Obtener libros, obtener libro por id
-# Método sólo admin: Eliminar libro
-# Método para usuarios autenticados: Actualizar libro, registrar libro
+from helpers.auth import get_current_user, is_user_admin
 
 router = APIRouter(prefix="/book", tags=["Manejo de libros"])
 
 db_dependency = Annotated[Session, Depends(get_db)]
+logged_user_dependency = Annotated[User, Depends(get_current_user)]
+admin_user_dependency = Annotated[User, Depends(is_user_admin)]
 
 @router.post("/",
     status_code=status.HTTP_201_CREATED,
@@ -22,11 +21,12 @@ db_dependency = Annotated[Session, Depends(get_db)]
     description="Crea un nuevo registro de libro y lo persiste en la base de datos.",
     responses={
         201: {"description": "Libro creado exitosamente"},
+        401: {"description": "No se ha logeado"},
         409: {"description": "El libro ya se encuentra registrado"},
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def crear_libro(db: db_dependency, book: BookCreate):
+def crear_libro(db: db_dependency, user: logged_user_dependency, book: BookCreate):
     db_book = db.query(Book).filter(func.lower(Book.title) == book.title.lower(), func.lower(Book.author) == book.author.lower()).first()
     if db_book:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El libro ya se encuentra registrado")
@@ -67,3 +67,40 @@ def obtener_libro_por_id(db: db_dependency, id: int):
     if book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"El libro con ID {id} no existe en el sistema")
     return book
+
+@router.put("/{id}/",
+    status_code=status.HTTP_200_OK,
+    summary="Actualizar libro",
+    description="Actualiza la información de un libro registrado",
+    responses={
+        200: {"description": "Libro actualizado correctamente"},
+        401: {"description": "No se ha logeado"},
+        403: {"description": "Permisos insuficientes"},
+        404: {"description": "No se ha encontrado el libro"},
+        422: {"description": "Datos de entrada mal formados"}
+    },
+    response_model=BookResponse
+)
+def actualizar_libro(db: db_dependency, user: logged_user_dependency, id: int, book_data: BookCreate):
+    book = get_book_by_id(db, id)
+    if book is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"El libro con ID {id} no existe en el sistema")
+    return update_book(db, id, book_data)
+
+@router.delete("/{id}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Eliminar libro",
+    description="Elimina libro según su id comprobando permisos de administrador",
+    responses={
+        200: {"description": "Libro eliminado correctamente"},
+        401: {"description": "No se ha logeado"},
+        403: {"description": "Permisos insuficientes"},
+        404: {"description": "No se ha encontrado el libro"},
+        422: {"description": "Datos de entrada mal formados"}
+    }
+)
+def eliminar_libro(db: db_dependency, user: admin_user_dependency, id: int):
+    book = get_book_by_id(db, id)
+    if book is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"El libro con ID {id} no existe en el sistema")
+    return delete_book(db, id)

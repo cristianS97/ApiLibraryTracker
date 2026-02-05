@@ -32,10 +32,6 @@ class UserCreate(BaseModel):
         description="Rol del usuario en el sistema"
     )
 
-class UserLogin(BaseModel):
-    username: str = Field(..., description="Nombre de usuario registrado")
-    password: str = Field(..., description="Contraseña del usuario")
-
 # Esquema para el Token
 class Token(BaseModel):
     access_token: str = Field(..., description="JWT generado para autenticación")
