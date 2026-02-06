@@ -92,7 +92,7 @@ def actualizar_libro(db: db_dependency, user: logged_user_dependency, id: int, b
     summary="Eliminar libro",
     description="Elimina libro según su id comprobando permisos de administrador",
     responses={
-        200: {"description": "Libro eliminado correctamente"},
+        204: {"description": "Libro eliminado correctamente"},
         401: {"description": "No se ha logeado"},
         403: {"description": "Permisos insuficientes"},
         404: {"description": "No se ha encontrado el libro"},
