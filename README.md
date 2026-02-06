@@ -1,5 +1,10 @@
 # 📚 ApiLibraryTracker
 
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+
 Este es el backend de la aplicación BookTracker, desarrollado con FastAPI. Proporciona un sistema de gestión de libros y autenticación centralizado mediante JWT (JSON Web Tokens) con seguridad basada en roles.
 
 ## 🛠️ Tecnologías utilizadas
@@ -46,10 +51,21 @@ A1BookTracker/
 ## 🔐 Endpoints Disponibles
 
 ### Autenticación (Usuarios)
-- POST /users/register : Registra un nuevo usuario. (409 si ya existe).
-- POST /users/login    : Valida credenciales y retorna un JWT Bearer Token.
+| Método | Endpoint | Descripción |
+| :--- | :--- | :--- |
+| ![POST](https://img.shields.io/badge/POST-blue) | /users/register | Registra un nuevo usuario. (409 si ya existe). |
+| ![POST](https://img.shields.io/badge/POST-blue) | /users/login | Valida credenciales y retorna un JWT Bearer Token. |
 
 ### Gestión de Libros
-- POST /book/          : Registra un nuevo libro. Valida duplicados por título/autor.
-- GET  /book/          : Retorna todos los libros. Permite filtrar por autor usando query params (?author=nombre).
-- GET  /book/{id}/     : Retorna la información detallada de un libro específico por su ID.
+| Método | Endpoint | Descripción |
+| :--- | :--- | :--- |
+| ![POST](https://img.shields.io/badge/POST-blue) | /book/ | Registra un nuevo libro. Valida duplicados por título/autor. |
+| ![GET](https://img.shields.io/badge/GET-green) | /book/ | Retorna todos los libros. Permite filtrar por autor usando query params (?author=nombre) |
+| ![GET](https://img.shields.io/badge/GET-green) | /book/{id}/ | Retorna la información detallada de un libro específico por su ID. |
+| ![PUT](https://img.shields.io/badge/PUT-orange) | /book/{id}/ | Actualiza los datos de un libro existente. Requiere el cuerpo completo del recurso. |
+| ![DELETE](https://img.shields.io/badge/DELETE-red) | /book/{id}/ | Elimina de forma permanente un libro del sistema según su ID. |
+
+## 💻 Notas para el Desarrollador Android
+
+Para conectar el emulador a la API en Docker, usa la dirección:
+http://10.0.2.2:8000
