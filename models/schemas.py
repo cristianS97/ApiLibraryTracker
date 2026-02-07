@@ -61,6 +61,7 @@ class BookResponse(BaseModel):
     title: str
     author: str
     description: Optional[str]
+    image: Optional[str]
 
     class Config:
         from_attributes = True

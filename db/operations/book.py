@@ -3,8 +3,8 @@ from models.models import Book
 from models.schemas import BookCreate
 from sqlalchemy import func
 
-def create_book(db: Session, book: BookCreate):
-    new_book = Book(title = book.title, author = book.author, description = book.description)
+def create_book(db: Session, book: BookCreate, image_path: str = None):
+    new_book = Book(title = book.title, author = book.author, description = book.description, image = image_path)
     db.add(new_book)
     db.commit()
     db.refresh(new_book)
@@ -19,11 +19,13 @@ def get_book_by_id(db: Session, id: int):
 def get_books_by_author(db: Session, author: str):
     return db.query(Book).filter(func.lower(Book.author) == author.lower())
 
-def update_book(db: Session, book_id: int, book_data: BookCreate):
+def update_book(db: Session, book_id: int, book_data: BookCreate, image_path: str = None):
     book = db.query(Book).filter(Book.id == book_id).first()
     book.title = book_data.title
     book.author = book_data.author
     book.description = book_data.description
+    if image_path:
+        book.image = image_path
     db.commit()
     db.refresh(book)
     return book

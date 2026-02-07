@@ -20,6 +20,7 @@ class Book(Base):
     title = Column(String, nullable=False)
     author = Column(String, nullable=False)
     description = Column(String)
+    image = Column(String, nullable=True)
 
     # Relación para saber qué usuarios han valorado este libro
     user_ratings = relationship("UserBook", back_populates="book")

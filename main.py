@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from models import models
 from db.database import engine
 from routers import users, books
@@ -12,6 +13,8 @@ app = FastAPI(
     description="API para practicar: Libros, Usuarios y Valoraciones",
     version="1.0.0"
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Conectamos los módulos de rutas
 # El prefix y los tags ya los definimos dentro de cada router
