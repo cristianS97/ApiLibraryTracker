@@ -12,9 +12,6 @@ from sqlalchemy import func
 from helpers.auth import get_current_user, is_user_admin
 from helpers.images import save_book_image, delete_book_image
 
-UPLOAD_DIR = Path("static/books")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
 router = APIRouter(prefix="/book", tags=["Manejo de libros"])
 
 db_dependency = Annotated[Session, Depends(get_db)]
