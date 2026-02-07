@@ -90,7 +90,6 @@ def obtener_libro_por_id(db: db_dependency, id: int):
     },
     response_model=BookResponse
 )
-@router.put("/{id}/", response_model=BookResponse)
 def actualizar_libro(db: db_dependency, user: logged_user_dependency, id: int, book_data: update_dependency):
     book = get_book_by_id(db, id)
     if book is None:
