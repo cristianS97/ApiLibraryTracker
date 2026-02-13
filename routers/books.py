@@ -1,4 +1,3 @@
-from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
@@ -47,7 +46,6 @@ def crear_libro(db: db_dependency, user: logged_user_dependency, form_data: crea
     description="Retorna todos los libros registrados en la base de datos o los libros de un autor especifico.",
     responses={
         200: {"description": "Se retornan los libros"},
-        404: {"description": "No se han encontrado libros para el autor especificado."},
         422: {"description": "Datos de entrada mal formados"}
     },
     response_model=List[BookResponse]
