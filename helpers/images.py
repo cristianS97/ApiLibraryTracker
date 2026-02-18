@@ -8,7 +8,7 @@ UPLOAD_DIR = Path("static/books")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 def save_book_image(file: UploadFile, title: str, author: str) -> str:
-    if file.content_type not in ["image/jpeg", "image/png"]:
+    if file.content_type not in ["image/jpeg", "image/jpg", "image/png"]:
         raise HTTPException(status_code=400, detail="Solo se permiten imágenes JPG o PNG")
 
     file_extension = file.filename.split(".")[-1]
