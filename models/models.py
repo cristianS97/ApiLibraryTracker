@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint, DateTime
 from sqlalchemy.orm import relationship
 from db.database import Base
+from sqlalchemy.sql import func
 
 class User(Base):
     __tablename__ = "users"
@@ -39,7 +40,10 @@ class UserBook(Base):
     status = Column(String, nullable=False) 
     
     # Valoración numérica
-    rating = Column(Integer, nullable=False)
+    rating = Column(Integer, nullable=True)
+
+    # Fecha de última modificación
+    updated_at = Column(DateTime, onupdate=func.now(), server_default=func.now())
 
     # Relaciones para acceder fácilmente desde el objeto UserBook
     user = relationship("User", back_populates="my_books")
