@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from models import models
 from db.database import engine
-from routers import users, books, userbook
+from routers import users, books, userbook, setup
 
 # fastapi dev main.py
 # Esto crea físicamente el archivo library.db y las tablas si no existen
@@ -21,6 +21,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(users.router)
 app.include_router(books.router)
 app.include_router(userbook.router)
+app.include_router(setup.router)
 
 @app.get("/")
 def read_root():

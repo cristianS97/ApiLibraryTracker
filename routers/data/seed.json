@@ -1,0 +1,44 @@
+[
+    {
+        "title": "Estudio en escarlata",
+        "author": "Arthur Conan Doyle",
+        "description": "Estudio en escarlata es una novela de misterio escrita por Arthur Conan Doyle y publicada en la revista Beeton's Christmas Annual de noviembre de 1887, con ilustraciones de David Henry Friston.​ Se trata de la primera aparición de los personajes de Sherlock Holmes y el Doctor Watson.",
+        "image_filename": "Estudio en escarlata.jpg"
+    },
+    {
+        "title": "El signo de los cuatro",
+        "author": "Arthur Conan Doyle",
+        "description": "El signo de los cuatro es la segunda novela protagonizada por Sherlock Holmes, escrita por Arthur Conan Doyle. Su título también se ha traducido como La señal de los cuatro.",
+        "image_filename": "El signo de los cuatro.jpg"
+    },
+    {
+        "title": "El sabueso de los Baskerville",
+        "author": "Arthur Conan Doyle",
+        "description": "El sabueso de los Baskerville, también traducido como El perro de los Baskerville o El mastín de los Baskerville, es la tercera novela de Arthur Conan Doyle que tiene como protagonista principal a Sherlock Holmes. Fue publicada por entregas en el The Strand Magazine entre 1901 y 1902.",
+        "image_filename": "El sabueso de los Baskerville.jpg"
+    },
+    {
+        "title": "It",
+        "author": "Stephen King",
+        "description": "It es una novela de terror publicada en 1986 por el escritor estadounidense Stephen King. Cuenta la historia, en un juego de correspondencias con el pasado y el presente, de un grupo de siete amigos",
+        "image_filename": "It.png"
+    },
+    {
+        "title": "El resplandor",
+        "author": "Stephen King",
+        "description": "El resplandor es la tercera novela de terror del escritor estadounidense Stephen King, publicada en 1977. El título se inspiró en la canción de John Lennon Instant Karma!,",
+        "image_filename": "El resplandor.jpg"
+    },
+    {
+        "title": "El valle del terror",
+        "author": "Arthur Conan Doyle",
+        "description": "El valle del terror es la cuarta novela protagonizada por Sherlock Holmes y escrita por Arthur Conan Doyle. Esta novela fue publicada por primera vez en el Strand Magazine entre septiembre de 1914 y mayo de 1915. La primera edición en formato libro fue publicado en Nueva York el 27 de febrero de 1915.",
+        "image_filename": "El valle del terror.jpg"
+    },
+    {
+        "title": "Caminos cruzados",
+        "author": "Erlantz Gamboa",
+        "description": "En Arteaga, una pequeña población, es cruelmente asesinado un matrimonio. Carvajal, el jefe de la policía local, avisa a los federales. Estos se presentan con celeridad, pues se encuentran cerca siguiendo la pista de un peligroso asesino en serie, a quien llaman Calígula, cuyas víctimas son siempre parejas.",
+        "image_filename": "Caminos cruzados.jpg"
+    }
+]

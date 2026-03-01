@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint, DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
 from db.database import Base
 from sqlalchemy.sql import func
@@ -33,8 +33,10 @@ class UserBook(Base):
     """
     __tablename__ = "user_books"
 
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    book_id = Column(Integer, ForeignKey("books.id"), primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    book_id = Column(Integer, ForeignKey("books.id"), nullable=False)
 
     # El estado (status) se validará en Pydantic, pero se guarda como String
     status = Column(String, nullable=False) 
@@ -52,4 +54,5 @@ class UserBook(Base):
     # Restricción opcional a nivel BBDD para el rating (1 a 5)
     __table_args__ = (
         CheckConstraint('rating >= 1 AND rating <= 5', name='check_rating_range'),
+        UniqueConstraint('user_id', 'book_id', name='uq_user_book')
     )

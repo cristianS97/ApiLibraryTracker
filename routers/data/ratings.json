@@ -1,0 +1,98 @@
+[
+    {
+        "username": "user",
+        "book_title": "Estudio en escarlata",
+        "rating": 5,
+        "status": "Leído"
+    },
+    {
+        "username": "user2",
+        "book_title": "Estudio en escarlata",
+        "rating": 3,
+        "status": "Leído"
+    },
+    {
+        "username": "admin",
+        "book_title": "Estudio en escarlata",
+        "rating": 4,
+        "status": "Leído"
+    },
+    {
+        "username": "user",
+        "book_title": "El signo de los cuatro",
+        "rating": 4,
+        "status": "Leído"
+    },
+    {
+        "username": "user2",
+        "book_title": "El signo de los cuatro",
+        "rating": 5,
+        "status": "Leído"
+    },
+    {
+        "username": "admin",
+        "book_title": "El sabueso de los Baskerville",
+        "rating": 5,
+        "status": "Leído"
+    },
+    {
+        "username": "user",
+        "book_title": "El sabueso de los Baskerville",
+        "rating": 2,
+        "status": "Leído"
+    },
+    {
+        "username": "user2",
+        "book_title": "It",
+        "rating": 5,
+        "status": "Leyendo"
+    },
+    {
+        "username": "user",
+        "book_title": "It",
+        "rating": 4,
+        "status": "Leído"
+    },
+    {
+        "username": "admin",
+        "book_title": "El resplandor",
+        "rating": 5,
+        "status": "Leído"
+    },
+    {
+        "username": "user",
+        "book_title": "El resplandor",
+        "rating": 3,
+        "status": "Leído"
+    },
+    {
+        "username": "user2",
+        "book_title": "El resplandor",
+        "rating": 4,
+        "status": "Leído"
+    },
+    {
+        "username": "admin",
+        "book_title": "El valle del terror",
+        "rating": 4,
+        "status": "Leído"
+    },
+    {
+        "username": "user2",
+        "book_title": "El valle del terror",
+        "rating": 2,
+        "status": "Leído"
+    },
+    {
+        "username": "user",
+        "book_title": "Caminos cruzados",
+        "rating": 5,
+        "status": "Leído"
+    },
+    {
+        "username": "admin",
+        "book_title": "Caminos cruzados",
+        "rating": null,
+        "status": "Pendiente"
+    }
+]
