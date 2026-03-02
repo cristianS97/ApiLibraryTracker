@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Optional
+from datetime import datetime
 
 # Definimos los estados permitidos
 class BookStatus(str, Enum):
@@ -62,6 +63,16 @@ class BookResponse(BaseModel):
     author: str
     description: Optional[str]
     image: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+class UserBookResponse(BaseModel):
+    id: int
+    status: str
+    rating: Optional[int]
+    updated_at: datetime
+    book: BookResponse
 
     class Config:
         from_attributes = True
