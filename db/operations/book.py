@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from models.models import Book
+from models.models import Book, UserBook
 from models.schemas import BookCreate
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, label
 
 def create_book(db: Session, book: BookCreate, image_path: str = None):
     new_book = Book(title = book.title, author = book.author, description = book.description, image = image_path)
@@ -11,7 +11,16 @@ def create_book(db: Session, book: BookCreate, image_path: str = None):
     return new_book
 
 def get_all_books(db: Session):
-    return db.query(Book).order_by(desc(Book.id)).all()
+    query = db.query(
+        Book,
+        label("average_rating", func.avg(UserBook.rating))
+    ).outerjoin(UserBook).group_by(Book.id).order_by(desc(Book.id)).all()
+    results = []
+    for book, avg in query:
+        book.average_rating = avg # Inyectamos el promedio en el objeto
+        results.append(book)
+
+    return results
 
 def get_book_by_id(db: Session, id: int):
     return db.query(Book).filter(Book.id == id).first()

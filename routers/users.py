@@ -11,6 +11,9 @@ from typing import Annotated
 
 router = APIRouter(prefix="/users", tags=["Autenticación"])
 
+db_dependency = Annotated[Session, Depends(get_db)]
+login_form_dependency = Annotated[OAuth2PasswordRequestForm, Depends()]
+
 @router.post(
     "/register",
     status_code=status.HTTP_201_CREATED,
@@ -20,7 +23,7 @@ router = APIRouter(prefix="/users", tags=["Autenticación"])
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def register(user: UserCreate, db: Session = Depends(get_db)):
+def register(user: UserCreate, db: db_dependency):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe usuario con ese nombre de usuario")
@@ -37,7 +40,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+def login(form_data: login_form_dependency, db: db_dependency):
     db_user = db.query(User).filter(User.username == form_data.username).first()
     if not db_user or not verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Credenciales incorrectas")
