@@ -9,13 +9,16 @@ from db.database import get_db
 from models.models import User
 from starlette import status
 from models.schemas import UserRole
+from typing import Optional
 
 SECRET_KEY = "mi_clave_secreta_para_practicar"
 ALGORITHM = "HS256"
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="users/login")
+oauth2_bearer_optional = OAuth2PasswordBearer(tokenUrl="users/login", auto_error=False)
 
 db_dependency = Annotated[Session, Depends(get_db)]
 token_dependency = Annotated[str, Depends(oauth2_bearer)]
+optional_token_dependency = Annotated[Optional[str], Depends(oauth2_bearer_optional)]
 
 def verify_password(plain_password: str, hashed_password: str):
     return bcrypt.checkpw(
@@ -54,3 +57,16 @@ def is_user_admin(current_user: Annotated[User, Depends(get_current_user)]):
     if current_user.role != UserRole.admin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No tiene permisos para realizar esta acción")
     return current_user
+
+def get_current_user_optional(db: db_dependency, token: optional_token_dependency):
+    if token is None:
+        return None
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return None
+        user = db.query(User).filter(User.username == username).first()
+        return user
+    except JWTError:
+        return None

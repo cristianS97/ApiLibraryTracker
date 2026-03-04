@@ -22,8 +22,32 @@ def get_all_books(db: Session):
 
     return results
 
-def get_book_by_id(db: Session, id: int):
-    return db.query(Book).filter(Book.id == id).first()
+def get_book_by_id(db: Session, book_id: int, current_user_id: int = None):
+    result = db.query(
+        Book, 
+        func.avg(UserBook.rating).label("avg_rating")
+    ).outerjoin(
+        UserBook, Book.id == UserBook.book_id
+    ).filter(
+        Book.id == book_id
+    ).group_by(Book.id).first()
+
+    if not result:
+        return None
+
+    book, avg = result
+    book.average_rating = avg
+
+    book.user_rating = None
+    if current_user_id:
+        user_entry = db.query(UserBook).filter(
+            UserBook.book_id == book_id, 
+            UserBook.user_id == current_user_id
+        ).first()
+        if user_entry:
+            book.user_rating = user_entry.rating
+
+    return book
 
 def get_books_by_author(db: Session, author: str):
     return db.query(Book).filter(func.lower(Book.author) == author.lower()).order_by(desc(Book.id))

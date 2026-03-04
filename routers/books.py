@@ -8,7 +8,7 @@ from models.schemas import BookCreate, BookResponse
 from models.models import Book, User
 from models.forms import BookForm, BookUpdateForm
 from sqlalchemy import func
-from helpers.auth import get_current_user, is_user_admin
+from helpers.auth import get_current_user, is_user_admin, get_current_user_optional
 from helpers.images import save_book_image, delete_book_image
 
 router = APIRouter(prefix="/book", tags=["Manejo de libros"])
@@ -18,6 +18,7 @@ logged_user_dependency = Annotated[User, Depends(get_current_user)]
 admin_user_dependency = Annotated[User, Depends(is_user_admin)]
 create_dependency = Annotated[BookForm, Depends()]
 update_dependency = Annotated[BookUpdateForm, Depends()]
+optional_token_dependency = Annotated[Optional[User], Depends(get_current_user_optional)]
 
 @router.post("/",
     status_code=status.HTTP_201_CREATED,
@@ -69,8 +70,9 @@ def obtener_libros(db: db_dependency, author: Optional[str] = Query(None, descri
     },
     response_model=BookResponse
 )
-def obtener_libro_por_id(db: db_dependency, id: int):
-    book = get_book_by_id(db, id)
+def obtener_libro_por_id(db: db_dependency, id: int, user: optional_token_dependency = None):
+    user_id = user.id if user else None
+    book = get_book_by_id(db, id, user_id)
     if book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"El libro con ID {id} no existe en el sistema")
     return book
