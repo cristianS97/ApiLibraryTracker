@@ -78,3 +78,20 @@ class UserBookResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserBookCreate(BaseModel):
+    book_id: int = Field(
+        ...,
+        description="ID del libro a añadir"
+    )
+    status: BookStatus = Field(default=BookStatus.pendiente)
+    rating: Optional[int] = Field(
+        None,
+        ge=1,
+        le=5,
+        description="Valoración del 1 al 5"
+    )
+
+class UserBookUpdate(BaseModel):
+    status: Optional[BookStatus] = None
+    rating: Optional[int] = Field(None, ge=1, le=5)
