@@ -3,7 +3,7 @@ from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 from starlette import status
 from db.database import get_db
-from db.operations.book import create_book, get_all_books, get_book_by_id, get_books_by_author, update_book, delete_book
+from db.repository.book import create_book, get_all_books, get_book_by_id, get_books_by_author, update_book, delete_book
 from models.schemas import BookCreate, BookResponse
 from models.models import Book, User
 from models.forms import BookForm, BookUpdateForm

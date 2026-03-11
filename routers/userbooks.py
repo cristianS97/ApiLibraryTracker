@@ -1,17 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from typing import Annotated, List
 from sqlalchemy.orm import Session
 from starlette import status
 from db.database import get_db
-from db.operations.userbook import get_library, get_library_item, create_library_item, update_library_item, delete_library_item
-from models.models import User, UserBook
+from models.models import User
 from models.schemas import UserBookResponse, UserBookCreate, UserBookUpdate
 from helpers.auth import get_current_user
+from services.user_book_service import UserBookService
 
 router = APIRouter(prefix="/userbook", tags=["Gestión de mi librería"])
 
 db_dependency = Annotated[Session, Depends(get_db)]
 logged_user_dependency = Annotated[User, Depends(get_current_user)]
+
+def get_user_book_service(db: db_dependency) -> UserBookService:
+    return UserBookService(db)
+
+service_dependency = Annotated[UserBookService, Depends(get_user_book_service)]
 
 @router.get("/",
     status_code=status.HTTP_200_OK,
@@ -25,9 +30,8 @@ logged_user_dependency = Annotated[User, Depends(get_current_user)]
     },
     response_model=List[UserBookResponse]
 )
-def obtener_mi_libreria(db: db_dependency, user: logged_user_dependency):
-    library = get_library(db, user.id)
-    return library
+def obtener_mi_libreria(user: logged_user_dependency, service: service_dependency):
+    return service.get_library(user.id)
 
 @router.get("/{id}/",
     status_code=status.HTTP_200_OK,
@@ -41,11 +45,8 @@ def obtener_mi_libreria(db: db_dependency, user: logged_user_dependency):
     },
     response_model=UserBookResponse
 )
-def obtener_item_de_la_libreria(db: db_dependency, user: logged_user_dependency, id: int):
-    library = get_library_item(db, id)
-    if not library:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No se ha encontrado el elemento de la libería")
-    return library
+def obtener_item_de_la_libreria(user: logged_user_dependency, service: service_dependency, id: int):
+    return service.get_item(id, user.id)
 
 @router.post("/",
     status_code=status.HTTP_201_CREATED,
@@ -59,11 +60,8 @@ def obtener_item_de_la_libreria(db: db_dependency, user: logged_user_dependency,
     },
     response_model=UserBookResponse
 )
-def agregar_libro_en_libreria(db: db_dependency, user: logged_user_dependency, book: UserBookCreate):
-    item = db.query(UserBook).filter(UserBook.user_id == user.id, UserBook.book_id == book.book_id).first()
-    if item:
-        raise HTTPException(status_code=400, detail="Este libro ya está en tu librería.")
-    return create_library_item(db, user.id, book)
+def agregar_libro_en_libreria(book: UserBookCreate, user: logged_user_dependency, service: service_dependency):
+    return service.add_book(user.id, book)
 
 @router.put("/{id}/",
     status_code=status.HTTP_200_OK,
@@ -78,13 +76,8 @@ def agregar_libro_en_libreria(db: db_dependency, user: logged_user_dependency, b
     },
     response_model=UserBookResponse
 )
-def actualizar_libro_en_libreria(db: db_dependency, user: logged_user_dependency, id: int, book: UserBookUpdate):
-    item = db.query(UserBook).filter(UserBook.id == id).first()
-    if not item:
-        raise HTTPException(status_code=404, detail="No se ha encontrado el libro.")
-    if not item.user_id == user.id:
-        raise HTTPException(status_code=403, detail="No cuenta con permisos.")
-    return update_library_item(db, id, book)
+def actualizar_libro_en_libreria(id: int, book: UserBookUpdate, user: logged_user_dependency, service: service_dependency):
+    return service.update_item(id, user.id, book)
 
 @router.delete("/{id}/",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -98,12 +91,5 @@ def actualizar_libro_en_libreria(db: db_dependency, user: logged_user_dependency
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def eliminar_libro_de_libreria(db: db_dependency, user: logged_user_dependency, id: int):
-    library = get_library_item(db, id)
-    if library is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No se encuentra el registro en el sistema")
-
-    if not library.user_id == user.id:
-        raise HTTPException(status_code=403, detail="No cuenta con permisos.")
-
-    return delete_library_item(db, id)
+def eliminar_libro_de_libreria(id: int, user: logged_user_dependency, service: service_dependency):
+    return service.delete_item(id, user.id)
