@@ -8,3 +8,6 @@ def create_user(db: Session, user: UserCreate, hashed_password: str):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def get_user(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()

@@ -1,18 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from db.repository.user import create_user
 from db.database import get_db
 from models.schemas import UserCreate, Token
-from models.models import User
-from helpers.auth import get_password_hash, verify_password, create_access_token
 from starlette import status
 from typing import Annotated
+from services.user_service import UserService
 
 router = APIRouter(prefix="/users", tags=["Autenticación"])
 
 db_dependency = Annotated[Session, Depends(get_db)]
 login_form_dependency = Annotated[OAuth2PasswordRequestForm, Depends()]
+
+def get_user_service(db: db_dependency) -> UserService:
+    return UserService(db)
+
+service_dependency = Annotated[UserService, Depends(get_user_service)]
 
 @router.post(
     "/register",
@@ -23,12 +26,8 @@ login_form_dependency = Annotated[OAuth2PasswordRequestForm, Depends()]
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def register(user: UserCreate, db: db_dependency):
-    db_user = db.query(User).filter(User.username == user.username).first()
-    if db_user:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe usuario con ese nombre de usuario")
-    hashed = get_password_hash(user.password)
-    return create_user(db, user, hashed)
+def register(service: service_dependency, user: UserCreate):
+    return service.register(user.username)
 
 @router.post(
     "/login",
@@ -40,9 +39,5 @@ def register(user: UserCreate, db: db_dependency):
         422: {"description": "Datos de entrada mal formados"}
     }
 )
-def login(form_data: login_form_dependency, db: db_dependency):
-    db_user = db.query(User).filter(User.username == form_data.username).first()
-    if not db_user or not verify_password(form_data.password, db_user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Credenciales incorrectas")
-    access_token = create_access_token(data={"sub": db_user.username, "role": db_user.role})
-    return {"access_token": access_token, "token_type": "bearer"}
+def login(service: service_dependency, form_data: login_form_dependency):
+    return service.login(form_data.username, form_data.password)
