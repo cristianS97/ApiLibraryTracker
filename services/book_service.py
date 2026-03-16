@@ -1,16 +1,14 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 from db.repository import book
 from models.forms import BookForm, BookUpdateForm
 from models.schemas import BookCreate
-from models.models import Book
 from helpers.images import save_book_image, delete_book_image
 
 class BookService:
     def __init__(self, db: Session):
         self.db = db
-    
+
     def get_all_books(self, author: str = None):
         if author:
             books = book.get_books_by_author(self.db, author)
@@ -20,8 +18,7 @@ class BookService:
         return book.get_all_books(self.db)
 
     def create_book(self, form_data: BookForm):
-        db_book = self.db.query(Book).filter(func.lower(Book.title) == form_data.title.lower(), func.lower(Book.author) == form_data.author.lower()).first()
-        if db_book:
+        if book.get_book_by_author_and_name(self.db, form_data.title.lower(), form_data.author.lower()):
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El libro ya se encuentra registrado")
 
         image_url = save_book_image(form_data.file, form_data.title, form_data.author)

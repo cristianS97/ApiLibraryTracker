@@ -68,3 +68,9 @@ def delete_book(db: Session, book_id: int):
     db.delete(book)
     db.commit()
     return book
+
+def get_book_by_author_and_name(db: Session, title: str, author: str):
+    return db.query(Book).filter(
+        func.lower(Book.title) == title,
+        func.lower(Book.author) == author
+    ).first()
