@@ -74,3 +74,13 @@ def get_book_by_author_and_name(db: Session, title: str, author: str):
         func.lower(Book.title) == title,
         func.lower(Book.author) == author
     ).first()
+
+def get_authors_list(db: Session):
+    authors = (
+        db.query(Book.author)
+        .filter(Book.author.isnot(None))
+        .distinct()
+        .order_by(Book.author.asc())
+        .all()
+    )
+    return [author[0] for author in authors]

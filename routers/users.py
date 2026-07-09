@@ -27,7 +27,7 @@ service_dependency = Annotated[UserService, Depends(get_user_service)]
     }
 )
 def register(service: service_dependency, user: UserCreate):
-    return service.register(user.username)
+    return service.register(user)
 
 @router.post(
     "/login",

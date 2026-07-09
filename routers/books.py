@@ -50,6 +50,19 @@ def obtener_libros(service: service_dependency, author: Optional[str] = Query(No
 def crear_libro(service: service_dependency, user: logged_user_dependency, form_data: create_dependency):
     return service.create_book(form_data)
 
+@router.get("/authors/",
+    status_code=status.HTTP_200_OK,
+    summary="Obtener lista de autores",
+    description="Retorna los autores registrados.",
+    responses={
+        200: {"description": "Se retorna la lista de autores"},
+        422: {"description": "Datos de entrada mal formados"}
+    },
+    response_model=List[str]
+)
+def obtener_lista_autores(service: service_dependency):
+    return service.get_authors_list()
+
 @router.get("/{id}/",
     status_code=status.HTTP_200_OK,
     summary="Obtener libro según id",

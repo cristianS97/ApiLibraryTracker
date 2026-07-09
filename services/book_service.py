@@ -40,12 +40,12 @@ class BookService:
         image_url = db_book.image
 
         if book_data.file and book_data.file.filename:
-            book.delete_book_image(book.image)
+            delete_book_image(db_book.image)
             image_url = save_book_image(book_data.file, book_data.title, book_data.author)
 
         book_update_info = BookCreate(title=book_data.title, author=book_data.author, description=book_data.description)
 
-        return book.update_book(self.db, id, book_update_info, image_url)
+        return book.update_book(self.db, book_id, book_update_info, image_url)
 
     def delete_book(self, book_id: int):
         db_book = book.get_book_by_id(self.db, book_id)
@@ -55,3 +55,6 @@ class BookService:
         delete_book_image(db_book.image)
 
         return book.delete_book(self.db, book_id)
+
+    def get_authors_list(self):
+        return book.get_authors_list(self.db)
