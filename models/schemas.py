@@ -65,6 +65,7 @@ class BookResponse(BaseModel):
     image: Optional[str]
     average_rating: Optional[float] = None
     user_rating: Optional[int] = None
+    status: Optional[BookStatus] = None
 
     class Config:
         from_attributes = True

@@ -24,7 +24,7 @@ def get_all_books(db: Session):
 
 def get_book_by_id(db: Session, book_id: int, current_user_id: int = None):
     result = db.query(
-        Book, 
+        Book,
         func.avg(UserBook.rating).label("avg_rating")
     ).outerjoin(
         UserBook, Book.id == UserBook.book_id
@@ -39,6 +39,8 @@ def get_book_by_id(db: Session, book_id: int, current_user_id: int = None):
     book.average_rating = avg
 
     book.user_rating = None
+    book.status = None
+
     if current_user_id:
         user_entry = db.query(UserBook).filter(
             UserBook.book_id == book_id, 
@@ -46,6 +48,7 @@ def get_book_by_id(db: Session, book_id: int, current_user_id: int = None):
         ).first()
         if user_entry:
             book.user_rating = user_entry.rating
+            book.status = user_entry.status
 
     return book
 
